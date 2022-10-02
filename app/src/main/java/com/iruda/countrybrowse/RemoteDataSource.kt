@@ -12,7 +12,7 @@ class RemoteDataSource {
 
 interface RestCountriesAPI {
     @GET("name/{name}")
-    fun getCountryByName(@Path("name") cityName: String): List<Country>
+    suspend fun getCountryByName(@Path("name") cityName: String): List<Country>
 }
 
 var retrofit = Retrofit.Builder()
