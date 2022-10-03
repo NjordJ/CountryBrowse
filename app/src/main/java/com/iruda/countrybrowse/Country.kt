@@ -7,19 +7,14 @@ data class Country(
     val area: Long,
     val currencies: List<Currency>,
     val languages: List<Language>,
-) {
-
-}
+    val flag: String,
+)
 
 data class Currency(
     val name: String,
     val symbol: String,
-) {
-
-}
+)
 
 data class Language(
     val name: String,
-) {
-
-}
+)

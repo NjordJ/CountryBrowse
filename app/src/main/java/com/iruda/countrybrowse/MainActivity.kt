@@ -2,9 +2,16 @@ package com.iruda.countrybrowse
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.widget.ImageView
 import androidx.lifecycle.lifecycleScope
+import coil.ImageLoader
+import coil.decode.SvgDecoder
+import coil.load
+import coil.request.ImageRequest
+import coil.size.Scale
 import com.iruda.countrybrowse.databinding.ActivityMainBinding
 import kotlinx.coroutines.launch
+import java.util.*
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
@@ -28,6 +35,8 @@ class MainActivity : AppCompatActivity() {
                 binding.currencyTextView.text = currency
                 val languages: String = languageToString(country.languages)
                 binding.languagesTextView.text = languages
+
+                loadImageFromApi(binding.imageView, country.flag)
             }
 
         }
@@ -39,5 +48,25 @@ class MainActivity : AppCompatActivity() {
 
     private fun currencyToString(list: List<Currency>): String {
         return list.joinToString { it.name.plus(" " + it.symbol) }
+    }
+
+    private suspend fun loadImageFromApi(imageView: ImageView, url: String) {
+        if(url.lowercase(Locale.ENGLISH).endsWith("svg")) {
+            val imageLoader = ImageLoader.Builder(imageView.context)
+                .components {
+                    add(SvgDecoder.Factory())
+                }
+                .build()
+
+            val request = ImageRequest.Builder(imageView.context)
+                .data(url)
+                .target(imageView)
+                .build()
+            imageLoader.execute(request)
+        } else {
+            imageView.load(url){
+                scale(Scale.FILL)
+            }
+        }
     }
 }
