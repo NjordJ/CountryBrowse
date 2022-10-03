@@ -7,7 +7,7 @@ import com.iruda.countrybrowse.databinding.ActivityMainBinding
 import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
-    lateinit var binding: ActivityMainBinding
+    private lateinit var binding: ActivityMainBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
@@ -24,10 +24,20 @@ class MainActivity : AppCompatActivity() {
                 binding.capitalTextView.text = country.capital
                 binding.popularityTextView.text = country.population.toString()
                 binding.areaTextView.text = country.area.toString()
-                binding.currencyTextView.text = country.currencies.toString()
-                binding.languagesTextView.text = country.languages.toString()
+                val currency: String = currencyToString(country.currencies)
+                binding.currencyTextView.text = currency
+                val languages: String = languageToString(country.languages)
+                binding.languagesTextView.text = languages
             }
 
         }
+    }
+
+    private fun languageToString(list: List<Language>): String {
+        return list.joinToString { it.name }
+    }
+
+    private fun currencyToString(list: List<Currency>): String {
+        return list.joinToString { it.name.plus(" " + it.symbol) }
     }
 }
