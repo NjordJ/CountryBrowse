@@ -2,6 +2,7 @@ package com.iruda.countrybrowse
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
 import android.widget.ImageView
 import androidx.lifecycle.lifecycleScope
 import coil.ImageLoader
@@ -11,6 +12,7 @@ import coil.request.ImageRequest
 import coil.size.Scale
 import com.iruda.countrybrowse.databinding.ActivityMainBinding
 import kotlinx.coroutines.launch
+import java.lang.Exception
 import java.util.*
 
 class MainActivity : AppCompatActivity() {
@@ -24,19 +26,30 @@ class MainActivity : AppCompatActivity() {
             val countryName = binding.countryNameEditText.text.toString()
 
             lifecycleScope.launch{
-                val countries = restCountriesAPI.getCountryByName(countryName)
-                val country = countries[0]
+                try {
+                    val countries = restCountriesAPI.getCountryByName(countryName)
+                    val country = countries[0]
 
-                binding.countryNameTextView.text = country.name
-                binding.capitalTextView.text = country.capital
-                binding.popularityTextView.text = country.population.toString()
-                binding.areaTextView.text = country.area.toString()
-                val currency: String = currencyToString(country.currencies)
-                binding.currencyTextView.text = currency
-                val languages: String = languageToString(country.languages)
-                binding.languagesTextView.text = languages
+                    binding.countryNameTextView.text = country.name
+                    binding.capitalTextView.text = country.capital
+                    binding.popularityTextView.text = country.population.toString()
+                    binding.areaTextView.text = country.area.toString()
+                    val currency: String = currencyToString(country.currencies)
+                    binding.currencyTextView.text = currency
+                    val languages: String = languageToString(country.languages)
+                    binding.languagesTextView.text = languages
 
-                loadImageFromApi(binding.imageView, country.flag)
+                    loadImageFromApi(binding.imageView, country.flag)
+
+                    binding.statusLayout.visibility = View.INVISIBLE
+                    binding.resultLayout.visibility = View.VISIBLE
+                } catch (e: Exception) {
+                    binding.statusTextView.text = "Something went wrong"
+                    binding.statusImageView.setImageResource(R.drawable.ic_baseline_error_24)
+
+                    binding.statusLayout.visibility = View.VISIBLE
+                    binding.resultLayout.visibility = View.INVISIBLE
+                }
             }
 
         }
